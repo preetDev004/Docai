@@ -75,11 +75,12 @@
 .cl-internal-1dauvpw,.cl-internal-1hp5nqm {
   display: none;
 }
-.cl-formButtonPrimary {
+.cl-formButtonPrimary, .cl-internal-kvcwmp {
   background-color: rgb(21, 151, 69);
+  color: white;
   border: none !important;
 }
-.cl-formButtonPrimary:hover {
+.cl-formButtonPrimary:hover, .cl-internal-kvcwmp:hover {
   background-color: rgba(22, 163, 74, 0.884);
   border: none !important;
 }

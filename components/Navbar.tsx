@@ -3,6 +3,7 @@ import MaxWidthWrapper from "./MaxWidthWrapper";
 import Link from "next/link";
 import { buttonVariants } from "./ui/button";
 import { SignedIn, SignedOut, SignInButton, UserButton } from "@clerk/nextjs";
+import { ArrowRight } from "lucide-react";
 
 const Navbar = () => {
   return (
@@ -29,19 +30,34 @@ const Navbar = () => {
             </>
           </div>
 
-          <div
-            className={buttonVariants({
-              variant: "ghost",
-              size: "sm",
-            })}
-          >
-            {" "}
+          <div className="flex gap-2">
+            <>
+              <SignedOut>
+                <Link
+                href={"/sign-in"}
+                  className={buttonVariants({
+                    variant: "ghost",
+                    size: "sm",
+                  })}
+                >
+                  Sign in
+                </Link>
+              </SignedOut>
+              <SignedIn>
+                <UserButton />
+              </SignedIn>
+            </>
             <SignedOut>
-              <SignInButton />
+              <Link
+                href={"/sign-up"}
+                className={buttonVariants({
+                  variant: "success",
+                  size: "sm",
+                })}
+              >
+                Sign up <ArrowRight className="ml-1.5 h-4 w-4" />
+              </Link>
             </SignedOut>
-            <SignedIn>
-              <UserButton />
-            </SignedIn>
           </div>
         </div>
       </MaxWidthWrapper>

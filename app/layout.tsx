@@ -4,6 +4,7 @@ import "./globals.css";
 import { cn } from "@/lib/utils";
 import Navbar from "@/components/Navbar";
 import { ClerkProvider } from "@clerk/nextjs";
+import TRPCProvider from "@/components/TRPCProvider";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -18,18 +19,25 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <ClerkProvider>
-    <html lang="en" className="light">
-      <body
-        className={cn(
-          "min-h-screen font-sans antialiased grainy",
-          inter.className
-        )}
-      >
-        <Navbar />
-        {children}
-      </body>
-    </html>
+    <ClerkProvider
+      signInFallbackRedirectUrl={"/dashboard"}
+      signUpFallbackRedirectUrl={"/dashboard"}
+      afterMultiSessionSingleSignOutUrl={"/"}
+      afterSignOutUrl={"/"}
+    >
+      <TRPCProvider>
+        <html lang="en" className="light">
+          <body
+            className={cn(
+              "min-h-screen font-sans antialiased grainy",
+              inter.className
+            )}
+          >
+            <Navbar />
+            {children}
+          </body>
+        </html>
+      </TRPCProvider>
     </ClerkProvider>
   );
 }
