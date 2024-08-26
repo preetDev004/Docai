@@ -8,6 +8,20 @@
       "when": 1724626142282,
       "tag": "0000_flimsy_aqueduct",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1724640184278,
+      "tag": "0001_abandoned_kitty_pryde",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1724640301319,
+      "tag": "0002_vengeful_mandroid",
+      "breakpoints": true
     }
   ]
 }

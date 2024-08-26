@@ -1,10 +1,10 @@
+import Navbar from "@/components/Navbar";
+import TRPCProvider from "@/components/TRPCProvider";
+import { cn } from "@/lib/utils";
+import { ClerkProvider } from "@clerk/nextjs";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import { cn } from "@/lib/utils";
-import Navbar from "@/components/Navbar";
-import { ClerkProvider } from "@clerk/nextjs";
-import TRPCProvider from "@/components/TRPCProvider";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -25,7 +25,7 @@ export default function RootLayout({
       afterMultiSessionSingleSignOutUrl={"/"}
       afterSignOutUrl={"/"}
     >
-      <TRPCProvider>
+       <TRPCProvider>
         <html lang="en" className="light">
           <body
             className={cn(
