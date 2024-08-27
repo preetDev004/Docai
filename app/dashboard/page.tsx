@@ -6,23 +6,15 @@ import { eq } from "drizzle-orm";
 import { redirect } from "next/navigation";
 
 const Page = async () => {
-  // const test = async () => {
-  //   const query = await db.query.userTable.findFirst();
-  //   console.log(query);
-  // };
-  // test();
-
   const { userId } = auth();
   if (!userId) {
     redirect("/auth-callback?origin=dashboard");
   }
-  const dbUser = await db
-    .select()
-    .from(userTable)
-    .where(eq(userTable.id, userId))
-    .limit(1);
+  const dbUser = await db.query.userTable.findFirst({
+    where: eq(userTable.id, userId),
+  });
 
-  if (!dbUser[0]) {
+  if (!dbUser) {
     redirect("/auth-callback?origin=dashboard");
   }
 

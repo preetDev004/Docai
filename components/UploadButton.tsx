@@ -10,11 +10,10 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "./ui/button";
 import { PlusIcon } from "lucide-react";
-import { db } from "@/drizzle/db";
 
 const UploadButton = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
-  
+
   return (
     <Dialog
       onOpenChange={(v) => {
