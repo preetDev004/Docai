@@ -1,14 +1,32 @@
-import { currentUser } from "@clerk/nextjs/server";
+import Dashboard from "@/components/Dashboard";
+import { db } from "@/drizzle/db";
+import { userTable } from "@/drizzle/schema";
+import { auth } from "@clerk/nextjs/server";
+import { eq } from "drizzle-orm";
 import { redirect } from "next/navigation";
-import React from "react";
 
-const Dashboard = async () => {
-  const user = await currentUser();
+const Page = async () => {
+  // const test = async () => {
+  //   const query = await db.query.userTable.findFirst();
+  //   console.log(query);
+  // };
+  // test();
 
-  if(!user || !user.id){
-    redirect('/auth-callback?origin=dashboard')
+  const { userId } = auth();
+  if (!userId) {
+    redirect("/auth-callback?origin=dashboard");
   }
-  return <div>Dashboard</div>;
+  const dbUser = await db
+    .select()
+    .from(userTable)
+    .where(eq(userTable.id, userId))
+    .limit(1);
+
+  if (!dbUser[0]) {
+    redirect("/auth-callback?origin=dashboard");
+  }
+
+  return <Dashboard />;
 };
 
-export default Dashboard;
+export default Page;

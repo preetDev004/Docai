@@ -16,9 +16,10 @@ export const appRouter = router({
     const dbUser = await db
       .select()
       .from(userTable)
-      .where(eq(userTable.id, userId));
+      .where(eq(userTable.id, userId))
+      .limit(1);
 
-    if (!dbUser || dbUser.length === 0) {
+    if (!dbUser[0]) {
       await db
         .insert(userTable)
         .values({ id: user.id, email: user.emailAddresses[0].emailAddress });

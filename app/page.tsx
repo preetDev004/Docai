@@ -1,5 +1,6 @@
 import MaxWidthWrapper from "@/components/MaxWidthWrapper";
 import { buttonVariants } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 import { ArrowRight } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -29,10 +30,13 @@ export default function Home() {
         <Link
           href={"/dashboard"}
           target="_blank"
-          className={buttonVariants({
-            size: "lg",
-            className: "mt-5",
-          })}
+          className={cn(
+            "text-white",
+            buttonVariants({
+              size: "lg",
+              className: "mt-5",
+            })
+          )}
         >
           Get Started <ArrowRight className="ml-2 h-5 w-5" />
         </Link>

@@ -4,6 +4,7 @@ import Link from "next/link";
 import { buttonVariants } from "./ui/button";
 import { SignedIn, SignedOut, SignInButton, UserButton } from "@clerk/nextjs";
 import { ArrowRight } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 const Navbar = () => {
   return (
@@ -34,7 +35,7 @@ const Navbar = () => {
             <>
               <SignedOut>
                 <Link
-                href={"/sign-in"}
+                  href={"/sign-in"}
                   className={buttonVariants({
                     variant: "ghost",
                     size: "sm",
@@ -50,10 +51,12 @@ const Navbar = () => {
             <SignedOut>
               <Link
                 href={"/sign-up"}
-                className={buttonVariants({
-                  variant: "success",
-                  size: "sm",
-                })}
+                className={cn(
+                  "text-white",
+                  buttonVariants({
+                    size: "sm",
+                  })
+                )}
               >
                 Sign up <ArrowRight className="ml-1.5 h-4 w-4" />
               </Link>

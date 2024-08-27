@@ -30,7 +30,7 @@ const Page = () => {
 
   return (
     <>
-      {isLoading || !isSuccess ? (
+      {isLoading || !isSuccess && (
         <div className="w-full mt-24 flex justify-center">
           <div className="flex items-center gap-2 flex-col">
             <Loader2 className="w-8 h-8 animate-spin text-zinc-800" />
@@ -43,8 +43,6 @@ const Page = () => {
             </p>
           </div>
         </div>
-      ) : (
-        <div>AuthCallback</div>
       )}
     </>
   );
