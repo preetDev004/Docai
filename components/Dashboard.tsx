@@ -1,23 +1,26 @@
 "use client";
-import { FolderOpen, Plus } from "lucide-react";
-import UploadButton from "./UploadButton";
-import MaxWidthWrapper from "./MaxWidthWrapper";
 import { trpc } from "@/app/_trpc/client";
-import Loader from "./Loader";
+import { format } from "date-fns";
+import { Clock, FolderOpen, MessageSquareText, Trash2 } from "lucide-react";
 import Image from "next/image";
-import Skeleton from "react-loading-skeleton";
 import Link from "next/link";
-import {format} from "date-fns";
+import Skeleton from "react-loading-skeleton";
+import MaxWidthWrapper from "./MaxWidthWrapper";
+import UploadButton from "./UploadButton";
+import { Button } from "./ui/button";
 
 const Dashboard = () => {
-  const {
-    isError,
-    error,
-    data: files,
-    isLoading,
-  } = trpc.getUserFiles.useQuery(undefined, {
+  const utils = trpc.useUtils();
+  const { data: files, isLoading } = trpc.getUserFiles.useQuery(undefined, {
     retry: false,
   });
+
+  const { mutate: deleteFile } = trpc.deleteUserFile.useMutation({
+    onSuccess: () => {
+      utils.getUserFiles.invalidate();
+    },
+  });
+
   return (
     <MaxWidthWrapper classname="md:py-10">
       <div className="mt-8 flex items-center justify-between gap-4 border-b border-gray-200 pb-5">
@@ -25,9 +28,9 @@ const Dashboard = () => {
           <FolderOpen
             stroke="#ffffff"
             fill="#43A047"
-            className="w-10 h-10 sm:w-14 sm:h-14 lg:w-16 lg:h-16 xl:w-20 xl:h-20"
+            className="w-10 h-10 sm:w-14 sm:h-14 lg:w-16 lg:h-16"
           />
-          <h1 className="font-semibold text-2xl sm:text-3xl lg:text-4xl xl:text-5xl">
+          <h1 className="font-semibold text-2xl sm:text-3xl lg:text-4xl">
             My Files{" "}
           </h1>
         </div>
@@ -37,11 +40,11 @@ const Dashboard = () => {
       {/* display all user files  */}
       {isLoading ? (
         // <Loader title="Please wait..." description="Grabbing all your files." />
-        <div className="mt-24">
-          <Skeleton count={3} className="p-2 my-2" height={50} />
+        <div className="mt-8">
+          <Skeleton count={4} className="p-2 my-2" height={60} />
         </div>
       ) : files && files?.length !== 0 ? (
-        <ul className="mt-8 gid grid-cols-1 gap-6 divide-y divide-zinc-200 md:grid-cols-2 lg:grid-cols-3">
+        <ul className="mt-8 grd grid-cols-1 gap-6 divide-y divide-zinc-200 md:grid-cols-2 lg:grid-cols-3">
           {files
             .sort(
               (f1, f2) =>
@@ -58,7 +61,7 @@ const Dashboard = () => {
                   className="flex flex-col gap-2"
                 >
                   <div className="pt-6 px-6 w-full flex items-center justify-between space-x-6">
-                    <div className="w-10 h-10 flex-shrink-0 rounded-full bg-gradient-to-tr from-emerald-500 to-green-600" />
+                    <div className="w-10 h-10 flex-shrink-0 rounded-full bg-gradient-to-tr from-emerald-400 to-green-600" />
                     <div className="flex-1 truncate">
                       <div className="flex items-start space-x-3">
                         <h3 className="truncate text-lg font-medium text-zinc-900">
@@ -69,11 +72,28 @@ const Dashboard = () => {
                   </div>
                 </Link>
 
-                <div className="px-6 mt-4 grid-cols-3 place-items-center py-2 gap-6 text-xs text-zinc-500">
-                  <div className="flex items-center gap-2">
-                    <Plus className="w-4 h-4" />
-                    {format(new Date(file.createdAt), "dd MMMM yyyy")}
+                <div className="px-6 mt-4 grid grid-cols-3 place-items-center py-2 gap-6 text-xs text-zinc-500">
+                  <div className=" flex  items-center gap-2  ">
+                    <Clock className="w-4 h-4 flex-shrink-0 " />
+                    <span>
+                      {format(new Date(file.createdAt), "dd MMM yyyy")}
+                    </span>
                   </div>
+                  <div className="flex items-center gap-2 ">
+                    <MessageSquareText className="w-4 h-4" />
+                    <span>14</span>
+                  </div>
+                  <Button
+                    variant={"destructive"}
+                    size={"sm"}
+                    className="flex items-center"
+                    onClick={() => deleteFile({ fileId: file.id })}
+                  >
+                    <Trash2
+                      
+                      className=" transition-all duration-300 w-4 h-4 hover:scale-125"
+                    />
+                  </Button>
                 </div>
               </li>
             ))}

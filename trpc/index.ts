@@ -1,7 +1,9 @@
 import { db } from "@/drizzle/db";
 import { fileTable, userTable } from "@/drizzle/schema";
-import { eq } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 import { privateProcedure, router } from "./trpc";
+import { z } from "zod";
+import { TRPCError } from "@trpc/server";
 
 export const appRouter = router({
   authCallBack: privateProcedure.query(async ({ ctx }) => {
@@ -25,6 +27,25 @@ export const appRouter = router({
       .where(eq(fileTable.userId, ctx.userId));
     return files;
   }),
+  deleteUserFile: privateProcedure
+    .input(
+      z.object({
+        fileId: z.string(),
+      })
+    )
+    .mutation(async ({ input, ctx }) => {
+      const file = await db
+        .delete(fileTable)
+        .where(
+          and(eq(fileTable.id, input.fileId), eq(fileTable.userId, ctx.userId))
+        )
+        .returning();
+
+      if (!file) {
+        throw new TRPCError({ message: "NOT_FOUND", code: "NOT_FOUND" });
+      }
+      return file;
+    }),
 });
 
 // export type definition of API
