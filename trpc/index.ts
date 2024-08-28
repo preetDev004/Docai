@@ -3,7 +3,7 @@ import { fileTable, userTable } from "@/drizzle/schema";
 import { and, eq } from "drizzle-orm";
 import { privateProcedure, router } from "./trpc";
 import { z } from "zod";
-import { TRPCError } from "@trpc/server";
+import { TRPCClientError } from "@trpc/client";
 
 export const appRouter = router({
   authCallBack: privateProcedure.query(async ({ ctx }) => {
@@ -42,7 +42,7 @@ export const appRouter = router({
         .returning();
 
       if (!file) {
-        throw new TRPCError({ message: "NOT_FOUND", code: "NOT_FOUND" });
+        throw new TRPCClientError("File NOT_FOUND");
       }
       return file;
     }),

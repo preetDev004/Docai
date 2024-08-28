@@ -1,23 +1,55 @@
 "use client";
 import { trpc } from "@/app/_trpc/client";
 import { format } from "date-fns";
-import { Clock, FolderOpen, MessageSquareText, Trash2 } from "lucide-react";
+import {
+  Clock,
+  FolderOpen,
+  Loader2,
+  MessageSquareText,
+  Trash2,
+} from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import Skeleton from "react-loading-skeleton";
 import MaxWidthWrapper from "./MaxWidthWrapper";
 import UploadButton from "./UploadButton";
 import { Button } from "./ui/button";
+import { useToast } from "./ui/use-toast";
+import { useState } from "react";
 
 const Dashboard = () => {
+  const { toast } = useToast();
+
+  const [currentDeletingFile, setCurrentDeletingFile] = useState<string | null>(
+    null
+  );
+
   const utils = trpc.useUtils();
   const { data: files, isLoading } = trpc.getUserFiles.useQuery(undefined, {
     retry: false,
   });
 
   const { mutate: deleteFile } = trpc.deleteUserFile.useMutation({
+    onMutate: ({ fileId }) => {
+      setCurrentDeletingFile(fileId);
+    },
+    onSettled: () => {
+      setCurrentDeletingFile(null);
+    },
     onSuccess: () => {
       utils.getUserFiles.invalidate();
+      toast({
+        variant: "success",
+        title: "File Deleted, Successfully!",
+        duration: 2500,
+      });
+    },
+    onError: (err) => {
+      toast({
+        variant: "destructive",
+        title: err.message,
+        duration: 2500,
+      });
     },
   });
 
@@ -44,7 +76,7 @@ const Dashboard = () => {
           <Skeleton count={4} className="p-2 my-2" height={60} />
         </div>
       ) : files && files?.length !== 0 ? (
-        <ul className="mt-8 grd grid-cols-1 gap-6 divide-y divide-zinc-200 md:grid-cols-2 lg:grid-cols-3">
+        <ul className="mt-8 grid grid-cols-1 gap-6 divide-y divide-zinc-200 md:grid-cols-2 lg:grid-cols-3">
           {files
             .sort(
               (f1, f2) =>
@@ -61,7 +93,8 @@ const Dashboard = () => {
                   className="flex flex-col gap-2"
                 >
                   <div className="pt-6 px-6 w-full flex items-center justify-between space-x-6">
-                    <div className="w-10 h-10 flex-shrink-0 rounded-full bg-gradient-to-tr from-emerald-400 to-green-600" />
+                    {/* <div className="w-10 h-10 flex-shrink-0 rounded-full bg-gradient-to-tr from-emerald-400 to-green-600" /> */}
+                    <Image src={'/pdf-icon.svg'} alt="pdf" width={100} height={100} className="w-8 h-8 sm:w-10 sm:h-10"/>
                     <div className="flex-1 truncate">
                       <div className="flex items-start space-x-3">
                         <h3 className="truncate text-lg font-medium text-zinc-900">
@@ -89,10 +122,11 @@ const Dashboard = () => {
                     className="flex items-center"
                     onClick={() => deleteFile({ fileId: file.id })}
                   >
-                    <Trash2
-                      
-                      className=" transition-all duration-300 w-4 h-4 hover:scale-125"
-                    />
+                    {currentDeletingFile === file.id ? (
+                      <Loader2 className="animate-spin w-4 h-4 text-destructive-foreground" />
+                    ) : (
+                      <Trash2 className=" transition-all duration-300 w-4 h-4 hover:scale-125" />
+                    )}
                   </Button>
                 </div>
               </li>

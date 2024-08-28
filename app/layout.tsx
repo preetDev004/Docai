@@ -6,6 +6,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import "react-loading-skeleton/dist/skeleton.css"
+import { Toaster } from "@/components/ui/toaster";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
@@ -20,8 +21,6 @@ export default function RootLayout({
 }>) {
   return (
     <ClerkProvider
-      signInFallbackRedirectUrl={"/dashboard"}
-      signUpFallbackRedirectUrl={"/dashboard"}
       afterMultiSessionSingleSignOutUrl={"/"}
       afterSignOutUrl={"/"}
     >
@@ -35,6 +34,7 @@ export default function RootLayout({
           >
             <Navbar />
             {children}
+            <Toaster/>
           </body>
         </html>
       </TRPCProvider>

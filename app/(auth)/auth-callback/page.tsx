@@ -1,32 +1,38 @@
 "use client";
 import { trpc } from "@/app/_trpc/client";
 import Loader from "@/components/Loader";
+import { useUser } from "@clerk/nextjs";
 import { useRouter, useSearchParams } from "next/navigation";
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 
 const Page = () => {
+  // registring the user to the database
   const router = useRouter();
+  const { user } = useUser();
   const searchParams = useSearchParams();
 
   const origin = searchParams.get("origin");
 
   // type-safe data from api
-  const { isSuccess, error, isError, isLoading } = trpc.authCallBack.useQuery(
+  const { error, isSuccess, isLoading } = trpc.authCallBack.useQuery(
     undefined,
     {
       retry: false,
     }
   );
+
   useEffect(() => {
     if (error?.data?.code === "UNAUTHORIZED") {
-      router.push("/sign-in");
+      router.push(`/sign-in?origin=${origin}`);
     }
-  }, [isError, error]);
-  useEffect(() => {
-    if (isSuccess) {
-      router.push(origin ? `/${origin}` : "/dashboard");
+    if (user?.id) {
+      if (origin) {
+        router.back();
+      } else {
+        router.push("/dashboard");
+      }
     }
-  }, [isSuccess]);
+  }, [error, user]);
 
   return (
     <>
@@ -34,7 +40,7 @@ const Page = () => {
         (!isSuccess && (
           <Loader
             title="Setting up your account..."
-            description=" You will be redirected automatically."
+            description="You will be redirected automatically."
           />
         ))}
     </>
