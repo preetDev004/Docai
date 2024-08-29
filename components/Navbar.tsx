@@ -4,6 +4,7 @@ import { ArrowRight } from "lucide-react";
 import Link from "next/link";
 import MaxWidthWrapper from "./MaxWidthWrapper";
 import { buttonVariants } from "./ui/button";
+import UserProfileButton from "./UserProfileButton";
 
 const Navbar = () => {
   return (
@@ -30,37 +31,7 @@ const Navbar = () => {
             </>
           </div>
 
-          <div className="flex gap-2">
-            <>
-              <SignedOut>
-                <Link
-                  href={"/sign-in"}
-                  className={buttonVariants({
-                    variant: "ghost",
-                    size: "sm",
-                  })}
-                >
-                  Sign in
-                </Link>
-              </SignedOut>
-              <SignedIn>
-                <UserButton />
-              </SignedIn>
-            </>
-            <SignedOut>
-              <Link
-                href={"/sign-up"}
-                className={cn(
-                  "text-white",
-                  buttonVariants({
-                    size: "sm",
-                  })
-                )}
-              >
-                Sign up <ArrowRight className="ml-1.5 h-4 w-4" />
-              </Link>
-            </SignedOut>
-          </div>
+          <UserProfileButton />
         </div>
       </MaxWidthWrapper>
     </nav>

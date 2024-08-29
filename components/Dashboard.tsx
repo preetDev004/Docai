@@ -25,7 +25,8 @@ const Dashboard = () => {
 
   const utils = trpc.useUtils();
   const { data: files, isLoading } = trpc.getUserFiles.useQuery(undefined, {
-    retry: false,
+    retry: true,
+    retryDelay:500
   });
 
   const { mutate: deleteFile } = trpc.deleteUserFile.useMutation({
@@ -116,6 +117,7 @@ const Dashboard = () => {
                     <span>14</span>
                   </div>
                   <Button
+                    disabled={currentDeletingFile === file.id}
                     variant={"destructive"}
                     size={"sm"}
                     className="flex items-center"

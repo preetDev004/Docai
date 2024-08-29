@@ -46,6 +46,25 @@ export const appRouter = router({
       }
       return file;
     }),
+  getFile: privateProcedure
+    .input(
+      z.object({
+        key: z.string(),
+      })
+    )
+    .mutation(async ({ input, ctx }) => {
+      const file = await db.query.fileTable.findFirst({
+        where: and(
+          eq(fileTable.key, input.key),
+          eq(fileTable.userId, ctx.userId)
+        ),
+      });
+
+      if(!file){
+        throw new TRPCClientError("NOT_FOUND")
+      }
+      return file
+    }),
 });
 
 // export type definition of API
