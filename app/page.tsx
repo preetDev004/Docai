@@ -29,7 +29,7 @@ export default function Home() {
 
         <Link
           href={"/dashboard"}
-          target="_blank"
+          // target="_blank"
           className={cn(
             "text-white",
             buttonVariants({

@@ -23,7 +23,7 @@ const Page = () => {
 
   useEffect(() => {
     if (error?.data?.code === "UNAUTHORIZED") {
-      router.push(`/sign-in?origin=${origin}`);
+      router.push(`/sign-in?origin=${origin || "dashboard"}`);
     }
     if (user?.id) {
       if (origin) {
