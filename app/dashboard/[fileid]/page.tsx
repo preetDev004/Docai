@@ -30,14 +30,12 @@ const Page = async ({ params }: PageProps) => {
     <div className="flex-1 justify-between flex flex-col h-[calc(100vh-3.5rem)]">
       <div className=" w-full max-w-[1400px] mx-auto grow lg:flex xl:px-2">
         {/* PDF renderer */}
-        <div className="flex-1 xl:flex">
-          <div className="px-2.5 py-6 sm:px-6 xl:flex-1 ">
-            <PdfRenderer url={file.url} />
-          </div>
+        <div className="flex-1 px-2.5 py-6 sm:px-6">
+          <PdfRenderer url={file.url} />
         </div>
 
         {/* ChatWrapper */}
-        <div className="shrink-0 lg:flex lg:flex-[0.85]  border-t border-gray-200 lg:w-96 lg:border-l lg:border-t-0">
+        <div className="shrink-0 lg:flex lg:flex-[0.85] border-t border-gray-200 lg:w-96 lg:border-l lg:border-t-0">
           <ChatWrapper />
         </div>
       </div>

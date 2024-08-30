@@ -29,7 +29,7 @@ const Dashboard = () => {
     onMutate: ({ fileId }) => {
       setCurrentDeletingFile(fileId);
     },
-    onSettled: (file) => {
+    onSettled: () => {
       setCurrentDeletingFile(null);
     },
     onSuccess: async (file) => {
