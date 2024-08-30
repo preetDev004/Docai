@@ -1,12 +1,8 @@
 "use client";
+import { deleteS3Files } from "@/actions/delete-s3-file";
 import { trpc } from "@/app/_trpc/client";
 import { format } from "date-fns";
-import {
-  Clock,
-  Loader2,
-  MessageSquareText,
-  Trash2
-} from "lucide-react";
+import { Clock, Loader2, MessageSquareText, Trash2 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
@@ -26,23 +22,24 @@ const Dashboard = () => {
   const utils = trpc.useUtils();
   const { data: files, isLoading } = trpc.getUserFiles.useQuery(undefined, {
     retry: true,
-    retryDelay:500
+    retryDelay: 500,
   });
 
-  const { mutate: deleteFile } = trpc.deleteUserFile.useMutation({
+  const { mutate: deleteFileFromDB } = trpc.deleteUserFile.useMutation({
     onMutate: ({ fileId }) => {
       setCurrentDeletingFile(fileId);
     },
-    onSettled: () => {
+    onSettled: (file) => {
       setCurrentDeletingFile(null);
     },
-    onSuccess: () => {
+    onSuccess: async (file) => {
       utils.getUserFiles.invalidate();
       toast({
         variant: "success",
         title: "File Deleted, Successfully!",
         duration: 2500,
       });
+      await deleteS3Files(file[0].key);
     },
     onError: (err) => {
       toast({
@@ -94,11 +91,21 @@ const Dashboard = () => {
                 >
                   <div className="pt-6 px-6 w-full flex items-center justify-between space-x-6">
                     {/* <div className="w-10 h-10 flex-shrink-0 rounded-full bg-gradient-to-tr from-emerald-400 to-green-600" /> */}
-                    <Image src={'/pdf-icon.svg'} alt="pdf" width={100} height={100} className="w-8 h-8 sm:w-10 sm:h-10"/>
+                    <Image
+                      src={"/pdf-icon.svg"}
+                      alt="pdf"
+                      width={100}
+                      height={100}
+                      className="w-8 h-8 sm:w-10 sm:h-10"
+                    />
                     <div className="flex-1 truncate">
                       <div className="flex items-start space-x-3">
                         <h3 className="truncate text-lg font-medium text-zinc-900">
-                          {file.name}
+                          {file.name.length > 30
+                            ? file.name.slice(0, 15) +
+                              "..." +
+                              file.name.slice(-8)
+                            : file.name}
                         </h3>
                       </div>
                     </div>
@@ -121,7 +128,9 @@ const Dashboard = () => {
                     variant={"destructive"}
                     size={"sm"}
                     className="flex items-center"
-                    onClick={() => deleteFile({ fileId: file.id })}
+                    onClick={() => {
+                      deleteFileFromDB({ fileId: file.id });
+                    }}
                   >
                     {currentDeletingFile === file.id ? (
                       <Loader2 className="animate-spin w-4 h-4 text-destructive-foreground" />

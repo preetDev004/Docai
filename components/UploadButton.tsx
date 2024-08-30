@@ -1,20 +1,21 @@
 "use client";
+import { trpc } from "@/app/_trpc/client";
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { useUploadThing } from "@/lib/uploadthing";
+import { cn } from "@/lib/utils";
 import { DialogDescription, DialogTitle } from "@radix-ui/react-dialog";
-import { CloudUpload, File, PlusIcon } from "lucide-react";
+import { CloudUpload, File, Upload } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import Dropzone from "react-dropzone";
 import { Button } from "./ui/button";
 import { Progress } from "./ui/progress";
-import { useUploadThing } from "@/lib/uploadthing";
 import { useToast } from "./ui/use-toast";
-import { trpc } from "@/app/_trpc/client";
-import { useRouter } from "next/navigation";
 
 const UploadDropzone = () => {
   const router = useRouter();
@@ -50,7 +51,7 @@ const UploadDropzone = () => {
   const { startUpload } = useUploadThing("pdfUploader", {
     skipPolling: true,
     onClientUploadComplete: (res) => {
-      if (!res) {
+      if (!res || res.length === 0) {
         setIsFailed(true);
         setUploadProgress(100);
         toast({
@@ -84,6 +85,7 @@ const UploadDropzone = () => {
       }}
       multiple={false}
       onDrop={async (acceptedFiles) => {
+        setIsFailed(false);
         setUploadProgress(0);
         setIsUploading(true);
 
@@ -113,7 +115,7 @@ const UploadDropzone = () => {
               {acceptedFiles && acceptedFiles[0] ? (
                 <div className="max-w-xs bg-white flex items-center rounded-md overflow-hidden outline outline-[1px] outline-zinc-200 divide-x divide-zinc-200">
                   <div className="px-3 py-2 h-full grid place-items-center">
-                    <File className="w-4 h-4 text-green-600" />
+                    <File className={cn("w-4 h-4", isFailed ? "text-red-600": "text-green-600")}/>
                   </div>
                   <div className="px-3 py-2 h-full text-xs sm:text-sm truncate">
                     {acceptedFiles[0].name.length > 30
@@ -161,9 +163,9 @@ const UploadButton = () => {
       open={isOpen}
     >
       <DialogTrigger onClick={() => setIsOpen(true)} asChild>
-        <Button className="text-white p-1 sm:p-2 size-6 sm:size-auto">
-          <PlusIcon strokeWidth={3} className="w-4 h-4" />{" "}
-          <span className=" ml-1 hidden sm:block">Upload PDF</span>
+        <Button className="text-white p-1 sm:py-2 sm:px-4 size-6 sm:size-auto">
+          <Upload className="w-4 h-4" />{" "}
+          <span className=" ml-1 hidden sm:block">Upload</span>
         </Button>
       </DialogTrigger>
       <DialogContent className="p-8">

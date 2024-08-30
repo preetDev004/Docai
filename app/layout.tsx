@@ -5,7 +5,7 @@ import { ClerkProvider } from "@clerk/nextjs";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import "react-loading-skeleton/dist/skeleton.css"
+import "react-loading-skeleton/dist/skeleton.css";
 import { Toaster } from "@/components/ui/toaster";
 const inter = Inter({ subsets: ["latin"] });
 
@@ -19,12 +19,23 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  if (typeof Promise.withResolvers === "undefined") {
+    // @ts-expect-error This does not exist outside of polyfill which this is doing
+    Promise.withResolvers = function () {
+      let resolve, reject;
+      const promise = new Promise((res, rej) => {
+        resolve = res;
+        reject = rej;
+      });
+      return { promise, resolve, reject };
+    };
+  }
   return (
     <ClerkProvider
       afterMultiSessionSingleSignOutUrl={"/"}
       afterSignOutUrl={"/"}
     >
-       <TRPCProvider>
+      <TRPCProvider>
         <html lang="en" className="light">
           <body
             className={cn(
@@ -34,7 +45,7 @@ export default function RootLayout({
           >
             <Navbar />
             {children}
-            <Toaster/>
+            <Toaster />
           </body>
         </html>
       </TRPCProvider>
