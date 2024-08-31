@@ -11,6 +11,8 @@ import MaxWidthWrapper from "./MaxWidthWrapper";
 import UploadButton from "./UploadButton";
 import { Button } from "./ui/button";
 import { useToast } from "./ui/use-toast";
+import { columns } from "./Columns";
+import { DataTable } from "./DataTable";
 
 const Dashboard = () => {
   const { toast } = useToast();
@@ -73,75 +75,78 @@ const Dashboard = () => {
           <Skeleton count={4} className="p-2 my-2" height={60} />
         </div>
       ) : files && files?.length !== 0 ? (
-        <ul className="mt-8 grid grid-cols-1 gap-6 divide-y divide-zinc-200 md:grid-cols-2 lg:grid-cols-3">
-          {files
-            .sort(
-              (f1, f2) =>
-                new Date(f1.updatedAt).getTime() -
-                new Date(f2.updatedAt).getTime()
-            )
-            .map((file) => (
-              <li
-                key={file.id}
-                className="col-span-1 divide-y divide-gray-200 rounded-lg bg-white shadow trasition-all duration-200 hover:shadow-lg"
-              >
-                <Link
-                  href={`/dashboard/${file.id}`}
-                  className="flex flex-col gap-2"
+        <>
+          <ul className="mt-8 grid grid-cols-1 gap-6 divide-y divide-zinc-200 md:grid-cols-2 lg:grid-cols-3">
+            {files
+              .sort(
+                (f1, f2) =>
+                  new Date(f1.updatedAt).getTime() -
+                  new Date(f2.updatedAt).getTime()
+              )
+              .map((file) => (
+                <li
+                  key={file.id}
+                  className="col-span-1 divide-y divide-gray-200 rounded-lg bg-white shadow trasition-all duration-200 hover:shadow-lg"
                 >
-                  <div className="pt-6 px-6 w-full flex items-center justify-between space-x-6">
-                    {/* <div className="w-10 h-10 flex-shrink-0 rounded-full bg-gradient-to-tr from-emerald-400 to-green-600" /> */}
-                    <Image
-                      src={"/pdf-icon.svg"}
-                      alt="pdf"
-                      width={100}
-                      height={100}
-                      className="w-8 h-8 sm:w-10 sm:h-10"
-                    />
-                    <div className="flex-1 truncate">
-                      <div className="flex items-start space-x-3">
-                        <h3 className="truncate text-lg font-medium text-zinc-900">
-                          {file.name.length > 30
-                            ? file.name.slice(0, 15) +
-                              "..." +
-                              file.name.slice(-8)
-                            : file.name}
-                        </h3>
+                  <Link
+                    href={`/dashboard/${file.id}`}
+                    className="flex flex-col gap-2"
+                  >
+                    <div className="pt-6 px-6 w-full flex items-center justify-between space-x-6">
+                      {/* <div className="w-10 h-10 flex-shrink-0 rounded-full bg-gradient-to-tr from-emerald-400 to-green-600" /> */}
+                      <Image
+                        src={"/pdf-icon.svg"}
+                        alt="pdf"
+                        width={100}
+                        height={100}
+                        className="w-8 h-8 sm:w-10 sm:h-10"
+                      />
+                      <div className="flex-1 truncate">
+                        <div className="flex items-start space-x-3">
+                          <h3 className="truncate text-lg font-medium text-zinc-900">
+                            {file.name.length > 30
+                              ? file.name.slice(0, 15) +
+                                "..." +
+                                file.name.slice(-8)
+                              : file.name}
+                          </h3>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                </Link>
+                  </Link>
 
-                <div className="px-6 mt-4 grid grid-cols-3 place-items-center py-2 gap-6 text-xs text-zinc-500">
-                  <div className=" flex  items-center gap-2  ">
-                    <Clock className="w-4 h-4 flex-shrink-0 " />
-                    <span>
-                      {format(new Date(file.createdAt), "dd MMM yyyy")}
-                    </span>
+                  <div className="px-6 mt-4 grid grid-cols-3 place-items-center py-2 gap-6 text-xs text-zinc-500">
+                    <div className=" flex  items-center gap-2  ">
+                      <Clock className="w-4 h-4 flex-shrink-0 " />
+                      <span>
+                        {format(new Date(file.createdAt), "dd MMM yyyy")}
+                      </span>
+                    </div>
+                    <div className="flex items-center gap-2 ">
+                      <MessageSquareText className="w-4 h-4" />
+                      <span>14</span>
+                    </div>
+                    <Button
+                      disabled={currentDeletingFile === file.id}
+                      variant={"destructive"}
+                      size={"sm"}
+                      className="flex items-center"
+                      onClick={() => {
+                        deleteFileFromDB({ fileId: file.id });
+                      }}
+                    >
+                      {currentDeletingFile === file.id ? (
+                        <Loader2 className="animate-spin w-4 h-4 text-destructive-foreground" />
+                      ) : (
+                        <Trash2 className=" transition-all duration-300 w-4 h-4 hover:scale-125" />
+                      )}
+                    </Button>
                   </div>
-                  <div className="flex items-center gap-2 ">
-                    <MessageSquareText className="w-4 h-4" />
-                    <span>14</span>
-                  </div>
-                  <Button
-                    disabled={currentDeletingFile === file.id}
-                    variant={"destructive"}
-                    size={"sm"}
-                    className="flex items-center"
-                    onClick={() => {
-                      deleteFileFromDB({ fileId: file.id });
-                    }}
-                  >
-                    {currentDeletingFile === file.id ? (
-                      <Loader2 className="animate-spin w-4 h-4 text-destructive-foreground" />
-                    ) : (
-                      <Trash2 className=" transition-all duration-300 w-4 h-4 hover:scale-125" />
-                    )}
-                  </Button>
-                </div>
-              </li>
-            ))}
-        </ul>
+                </li>
+              ))}
+          </ul>
+          <DataTable columns={columns} data={files} />
+        </>
       ) : (
         <div className="w-full mt-24 flex flex-col items-center gap-4 text-center">
           <Image

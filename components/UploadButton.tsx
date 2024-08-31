@@ -9,7 +9,7 @@ import {
 import { useUploadThing } from "@/lib/uploadthing";
 import { cn } from "@/lib/utils";
 import { DialogDescription, DialogTitle } from "@radix-ui/react-dialog";
-import { CloudUpload, File, Upload } from "lucide-react";
+import { CloudUpload, File, Loader2, Upload } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import Dropzone from "react-dropzone";
@@ -75,7 +75,7 @@ const UploadDropzone = () => {
       });
     },
     onUploadProgress: (progress) => {
-      progress >= 80 ? setUploadProgress(85) : setUploadProgress(progress);
+      setUploadProgress(progress);
     },
   });
   return (
@@ -115,7 +115,12 @@ const UploadDropzone = () => {
               {acceptedFiles && acceptedFiles[0] ? (
                 <div className="max-w-xs bg-white flex items-center rounded-md overflow-hidden outline outline-[1px] outline-zinc-200 divide-x divide-zinc-200">
                   <div className="px-3 py-2 h-full grid place-items-center">
-                    <File className={cn("w-4 h-4", isFailed ? "text-red-600": "text-green-600")}/>
+                    <File
+                      className={cn(
+                        "w-4 h-4",
+                        isFailed ? "text-red-600" : "text-green-600"
+                      )}
+                    />
                   </div>
                   <div className="px-3 py-2 h-full text-xs sm:text-sm truncate">
                     {acceptedFiles[0].name.length > 30
@@ -136,6 +141,12 @@ const UploadDropzone = () => {
                   />
                 </div>
               ) : null}
+              {uploadProgress === 100 && (
+                <p className="flex items-center justify-center gap-1 mt-2 text-zinc-700">
+                  <Loader2 className="w-3 h-3 sm:w-4 sm:h-4 animate-spin"  />
+                  <span className="text-sm">Redirecting...</span>
+                </p>
+              )}
             </label>
             <input
               {...getInputProps()}
