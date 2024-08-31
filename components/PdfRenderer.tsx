@@ -34,10 +34,12 @@ const PdfRenderer = ({ url }: { url: string }) => {
 
   const [numPages, setNumPages] = useState<number>();
   const [currPage, setCurrPage] = useState<number>(1);
+  const [renderedScale, setRenderedScale] = useState<number | null>(null);
   const { width, ref } = useResizeDetector();
-
   const [scale, setScale] = useState<number>(1);
   const [rotation, setRotation] = useState<number>(0);
+
+  const isLoading = renderedScale !== scale; // loading is true when redndered scale does not match
 
   const pageValidator = z.object({
     page: z
@@ -83,7 +85,7 @@ const PdfRenderer = ({ url }: { url: string }) => {
 
           <div className="flex items-center gap-1.5">
             <Input
-              autoComplete="on"
+              autoComplete="off"
               onKeyDown={(e) => {
                 if (e.key === "Enter") {
                   handleSubmit(handlePageSubmit)();
@@ -195,14 +197,39 @@ const PdfRenderer = ({ url }: { url: string }) => {
               className=""
               file={url}
             >
+              {/* Loading for Low Threshold devices if scaling takes time */}
+              {isLoading && renderedScale ? (
+                // Show previous scale page until onRenderSuccess!
+                <Page
+                  key={"@" + renderedScale} // To avoid flicker add key to identify/distinguish both the pages
+                  rotate={rotation}
+                  scale={renderedScale}
+                  width={width ? width : 1}
+                  pageNumber={
+                    currPage > numPages!
+                      ? numPages!
+                      : currPage < 1
+                      ? 1
+                      : currPage
+                  }
+                />
+              ) : null}
+              {/* Hide this page when scale is changed */}
               <Page
+                key={"@" + scale}
                 rotate={rotation}
                 scale={scale}
                 width={width ? width : 1}
-                className="w-auto"
+                className={cn(isLoading ? "hidden" : "")}
                 pageNumber={
                   currPage > numPages! ? numPages! : currPage < 1 ? 1 : currPage
                 }
+                loading={
+                  <div className="flex h-full justify-center">
+                    <Loader2 className="my-24 w-4 h-4 animate-spin" />
+                  </div>
+                }
+                onRenderSuccess={() => setRenderedScale(scale)}
               />
             </Document>
           </div>
