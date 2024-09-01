@@ -17,8 +17,7 @@ import Link from "next/link";
 import { useState } from "react";
 import { Button } from "./ui/button";
 import { useToast } from "./ui/use-toast";
-// This type is used to define the shape of our data.
-// You can use a Zod schema here if you want.
+
 export type File = {
   id: string;
   key: string;
@@ -152,18 +151,84 @@ export const columns: ColumnDef<File>[] = [
     enableSorting: true,
     enableHiding: true,
   },
-
   {
     id: "actions",
-    header: ({ column }) => {
+    header: ({ table }) => {
+      const selectedRows = table.getFilteredSelectedRowModel().rows;
+
+      const { toast } = useToast();
+
+      const [currentDeletingFile, setCurrentDeletingFile] = useState<
+        string[] | null
+      >(null);
+
+      const utils = trpc.useUtils();
+
+      const { mutate: deleteFilesFromDB } = trpc.deleteUserFiles.useMutation({
+        onMutate: ({ fileId }) => {
+          setCurrentDeletingFile(fileId);
+        },
+        onSettled: () => {
+          setCurrentDeletingFile(null);
+        },
+        onSuccess: async (files) => {
+          utils.getUserFiles.invalidate();
+          toast({
+            variant: "success",
+            title: "File Deleted, Successfully!",
+            duration: 2500,
+          });
+          await deleteS3Files(files.map((obj) => obj.key));
+        },
+        onError: (err) => {
+          toast({
+            variant: "destructive",
+            title: err.message,
+            duration: 2500,
+          });
+        },
+      });
+
       return (
-        <Button
-          className="w-full flex items-center justify-end text-right font-normal"
-          variant="ghost"
-          onClick={() => {}}
-        >
-          <EllipsisVertical className="w-4 h-4 text-right" />
-        </Button>
+        <div className="relative w-full text-right flex items-center justify-end">
+          {
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button
+                  disabled={!!currentDeletingFile || !selectedRows.length}
+                  aria-label="zoom"
+                  variant={"ghost"}
+                  size={"sm"}
+                  className="gap-1.5 border-none ring-0 focus-visible:ring-0 rounded-full text-zinc-700 font-medium hover:bg-zinc-200"
+                >
+                  <EllipsisVertical className="w-3 h-3 sm:w-4 sm:h-4" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className="w-44 z-30 mr-5 lg:mr-20 bg-white px-2 py-2 shadow-lg border border-1 border-zinc-200 rounded-md ">
+                <DropdownMenuItem
+                  onClick={() => {
+                    deleteFilesFromDB({
+                      fileId: selectedRows.map((file) => file.original.id),
+                    });
+                  }}
+                  className="hover:border-none hover:outline-none hover:bg-zinc-200 py-1 px-2 rounded cursor-pointer flex gap-2"
+                >
+                  <Trash2 className="w-4 h-4 text-red-500" />
+                  <span className="text-red-600">
+                    {" "}
+                    Delete {selectedRows.length} files
+                  </span>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          }
+
+          {selectedRows.length > 0 && (
+            <div className="absolute -mt-1 top-0 right-0 w-4 h-4 sm:w-5 sm:h-5 rounded-full text-white text-center text-xs sm:text-sm bg-green-700">
+              {selectedRows.length}
+            </div>
+          )}
+        </div>
       );
     },
     enableHiding: false,

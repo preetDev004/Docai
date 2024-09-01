@@ -1,6 +1,6 @@
 import { db } from "@/drizzle/db";
 import { fileTable, userTable } from "@/drizzle/schema";
-import { and, eq } from "drizzle-orm";
+import { and, eq, inArray } from "drizzle-orm";
 import { privateProcedure, router } from "./trpc";
 import { z } from "zod";
 import { TRPCClientError } from "@trpc/client";
@@ -38,6 +38,25 @@ export const appRouter = router({
         .delete(fileTable)
         .where(
           and(eq(fileTable.id, input.fileId), eq(fileTable.userId, ctx.userId))
+        )
+        .returning();
+
+      if (!file) {
+        throw new TRPCClientError("File NOT_FOUND");
+      }
+      return file;
+    }),
+  deleteUserFiles: privateProcedure
+    .input(
+      z.object({
+        fileId: z.string().array(),
+      })
+    )
+    .mutation(async ({ input, ctx }) => {
+      const file = await db
+        .delete(fileTable)
+        .where(
+          and(inArray(fileTable.id, input.fileId), eq(fileTable.userId, ctx.userId))
         )
         .returning();
 
