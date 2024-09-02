@@ -140,7 +140,7 @@ export const columns: ColumnDef<File>[] = [
       return (
         <div className="text-right">
           <Link
-            className="w-full bg-zinc-200 hover:bg-zinc-300 shadow-b hover:shadow-md py-3 px-4 cursor-pointer rounded-md transition-all duration-300"
+            className="w-full border-2 broder-zinc-300 hover:bg-zinc-300 shadow-b hover:shadow py-2 px-4 cursor-pointer rounded-md transition-all duration-300"
             href={`/dashboard/${file.id}`}
           >
             Ask
@@ -211,7 +211,7 @@ export const columns: ColumnDef<File>[] = [
                       fileId: selectedRows.map((file) => file.original.id),
                     });
                   }}
-                  className="hover:border-none hover:outline-none hover:bg-zinc-200 py-1 px-2 rounded cursor-pointer flex gap-2"
+                  className="hover:border-none hover:outline-none hover:bg-gray-100 py-1 px-2 rounded cursor-pointer flex gap-2"
                 >
                   <Trash2 className="w-4 h-4 text-red-500" />
                   <span className="text-red-600">
@@ -285,7 +285,7 @@ export const columns: ColumnDef<File>[] = [
                   onClick={() => {
                     deleteFileFromDB({ fileId: file.id });
                   }}
-                  className="hover:border-none hover:outline-none hover:bg-zinc-200 py-1 px-2 rounded cursor-pointer flex gap-2"
+                  className="hover:border-none hover:outline-none hover:bg-gray-100 py-1 px-2 rounded cursor-pointer flex gap-2"
                 >
                   <Trash2 className="w-4 h-4 text-red-500" />
                   <span className="text-red-600"> Delete</span>
