@@ -19,7 +19,7 @@ export const ourFileRouter = {
       await db.insert(fileTable).values({
         name: file.name,
         key: file.key,
-        uploadStatus: "SUCCESS",
+        uploadStatus: "PROCESSING",
         url: file.url,
         userId: metadata.userId,
       });

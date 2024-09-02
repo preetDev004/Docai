@@ -56,7 +56,10 @@ export const appRouter = router({
       const file = await db
         .delete(fileTable)
         .where(
-          and(inArray(fileTable.id, input.fileId), eq(fileTable.userId, ctx.userId))
+          and(
+            inArray(fileTable.id, input.fileId),
+            eq(fileTable.userId, ctx.userId)
+          )
         )
         .returning();
 
@@ -79,10 +82,25 @@ export const appRouter = router({
         ),
       });
 
-      if(!file){
-        throw new TRPCClientError("NOT_FOUND")
+      if (!file) {
+        throw new TRPCClientError("NOT_FOUND");
       }
-      return file
+      return file;
+    }),
+  getFileUploadStatus: privateProcedure
+    .input(z.object({ fileId: z.string() }))
+    .query(async ({ input, ctx }) => {
+      const file = await db.query.fileTable.findFirst({
+        where: and(
+          eq(fileTable.id, input.fileId),
+          eq(fileTable.userId, ctx.userId)
+        ),
+      });
+      if (!file) {
+        // return as const to prevent TS error and know status is from enum type and can't be any other value.
+        return { status: "PENDING" as const };
+      }
+      return { status: file.uploadStatus };
     }),
 });
 
