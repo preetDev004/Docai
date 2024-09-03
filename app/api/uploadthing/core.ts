@@ -23,6 +23,8 @@ export const ourFileRouter = {
         url: file.url,
         userId: metadata.userId,
       });
+      // TODO: INDEX the FILE
+      
 
       return { uploadedBy: metadata.userId};
     }),
