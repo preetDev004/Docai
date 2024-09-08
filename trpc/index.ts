@@ -4,6 +4,7 @@ import { and, eq, inArray } from "drizzle-orm";
 import { privateProcedure, router } from "./trpc";
 import { z } from "zod";
 import { TRPCClientError } from "@trpc/client";
+import { deleteS3Files } from "@/actions/delete-s3-file";
 
 export const appRouter = router({
   authCallBack: privateProcedure.query(async ({ ctx }) => {
@@ -41,9 +42,13 @@ export const appRouter = router({
         )
         .returning();
 
-      if (!file) {
+      if (!file || file.length === 0) {
         throw new TRPCClientError("File NOT_FOUND");
       }
+      await deleteS3Files({
+        key: file.map((obj) => obj.key),
+        user: ctx.userId,
+      });
       return file;
     }),
   deleteUserFiles: privateProcedure
@@ -63,9 +68,14 @@ export const appRouter = router({
         )
         .returning();
 
-      if (!file) {
+      if (!file || file.length === 0) {
         throw new TRPCClientError("File NOT_FOUND");
       }
+
+      await deleteS3Files({
+        key: file.map((obj) => obj.key),
+        user: ctx.userId,
+      });
       return file;
     }),
   getFile: privateProcedure

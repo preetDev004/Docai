@@ -13,7 +13,7 @@ const Loader = ({ title, description }: LoaderProps) => {
         <Loader2 className="w-8 h-8 animate-spin text-zinc-800" />
         <div>
           <h3 className="text-base sm:text-lg font-semibold text-center">{title}</h3>
-          <p className="text-sm text-gray-600">{description}</p>
+          <p className="text-sm text-gray-600 text-center">{description}</p>
         </div>
       </div>
     </div>

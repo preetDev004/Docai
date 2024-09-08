@@ -1,5 +1,4 @@
 "use client";
-import { deleteS3Files } from "@/actions/delete-s3-file";
 import { trpc } from "@/app/_trpc/client";
 import { format } from "date-fns";
 import { Clock, Loader2, MessageSquareText, Trash2 } from "lucide-react";
@@ -7,12 +6,12 @@ import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 import Skeleton from "react-loading-skeleton";
+import { columns } from "./Columns";
+import { DataTable } from "./DataTable";
 import MaxWidthWrapper from "./MaxWidthWrapper";
 import UploadButton from "./UploadButton";
 import { Button } from "./ui/button";
 import { useToast } from "./ui/use-toast";
-import { columns } from "./Columns";
-import { DataTable } from "./DataTable";
 
 const Dashboard = () => {
   const { toast } = useToast();
@@ -41,7 +40,6 @@ const Dashboard = () => {
         title: "File Deleted, Successfully!",
         duration: 2500,
       });
-      await deleteS3Files(file[0].key);
     },
     onError: (err) => {
       toast({

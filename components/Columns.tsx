@@ -171,14 +171,13 @@ export const columns: ColumnDef<File>[] = [
         onSettled: () => {
           setCurrentDeletingFile(null);
         },
-        onSuccess: async (files) => {
+        onSuccess: () => {
           utils.getUserFiles.invalidate();
           toast({
             variant: "success",
             title: "File Deleted, Successfully!",
             duration: 2500,
           });
-          await deleteS3Files(files.map((obj) => obj.key));
         },
         onError: (err) => {
           toast({
@@ -256,7 +255,6 @@ export const columns: ColumnDef<File>[] = [
             title: "File Deleted, Successfully!",
             duration: 2500,
           });
-          await deleteS3Files(file[0].key);
         },
         onError: (err) => {
           toast({
