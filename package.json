@@ -9,7 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@clerk/nextjs": "^5.3.3",
+    "@clerk/nextjs": "^5.4.1",
     "@hookform/resolvers": "^3.9.0",
     "@neondatabase/serverless": "^0.9.4",
     "@pinecone-database/pinecone": "^3.0.2",
