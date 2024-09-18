@@ -198,7 +198,7 @@ export const columns: ColumnDef<File>[] = [
                   aria-label="zoom"
                   variant={"ghost"}
                   size={"sm"}
-                  className="gap-1.5 border-none ring-0 focus-visible:ring-0 rounded-full text-zinc-700 font-medium hover:bg-zinc-200"
+                  className="gap-1.5 border-none ring-0 focus-visible:ring-0 rounded-md text-zinc-700 font-medium hover:bg-zinc-200"
                 >
                   <EllipsisVertical className="w-3 h-3 sm:w-4 sm:h-4" />
                 </Button>
@@ -266,33 +266,30 @@ export const columns: ColumnDef<File>[] = [
       });
       return (
         <div className="w-full text-right">
-          {!currentDeletingFile ? (
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button
-                  aria-label="zoom"
-                  variant={"ghost"}
-                  size={"sm"}
-                  className="gap-1.5 border-none ring-0 focus-visible:ring-0 hover:bg-zinc-200"
-                >
-                  <EllipsisVertical className="w-3 h-3 sm:w-4 sm:h-4" />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent className="w-44 z-30 mr-5 lg:mr-20 bg-white px-2 py-2 shadow-lg border border-1 border-zinc-200 rounded-md ">
-                <DropdownMenuItem
-                  onClick={() => {
-                    deleteFileFromDB({ fileId: file.id });
-                  }}
-                  className="hover:border-none hover:outline-none hover:bg-gray-100 py-1 px-2 rounded cursor-pointer flex gap-2"
-                >
-                  <Trash2 className="w-4 h-4 text-red-500" />
-                  <span className="text-red-600"> Delete</span>
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-          ) : (
-            <Loader2 className="text-right animate-spin w-4 h-4 " />
-          )}
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button
+                disabled={!!currentDeletingFile}
+                aria-label="zoom"
+                variant={"ghost"}
+                size={"sm"}
+                className="gap-1.5 border-none ring-0 focus-visible:ring-0 hover:bg-zinc-200"
+              >
+                <EllipsisVertical className="w-3 h-3 sm:w-4 sm:h-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent className="w-44 z-30 mr-5 lg:mr-20 bg-white px-2 py-2 shadow-lg border border-1 border-zinc-200 rounded-md ">
+              <DropdownMenuItem
+                onClick={() => {
+                  deleteFileFromDB({ fileId: file.id });
+                }}
+                className="hover:border-none hover:outline-none hover:bg-gray-100 py-1 px-2 rounded cursor-pointer flex gap-2"
+              >
+                <Trash2 className="w-4 h-4 text-red-500" />
+                <span className="text-red-600"> Delete</span>
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
       );
     },
