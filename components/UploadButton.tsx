@@ -49,7 +49,6 @@ const UploadDropzone = () => {
   });
 
   const { startUpload } = useUploadThing("pdfUploader", {
-    skipPolling: true,
     onClientUploadComplete: (res) => {
       if (!res || res.length === 0) {
         setIsFailed(true);

@@ -1,3 +1,4 @@
+import { NextSSRPlugin} from "@uploadthing/react/next-ssr-plugin"
 import Navbar from "@/components/Navbar";
 import TRPCProvider from "@/components/TRPCProvider";
 import { cn } from "@/lib/utils";
@@ -8,6 +9,8 @@ import "./globals.css";
 import "react-loading-skeleton/dist/skeleton.css";
 import 'simplebar-react/dist/simplebar.min.css';
 import { Toaster } from "@/components/ui/toaster";
+import { extractRouterConfig } from "uploadthing/server";
+import { ourFileRouter } from "./api/uploadthing/core";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
@@ -20,17 +23,17 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  if (typeof Promise.withResolvers === "undefined") {
-    // @ts-expect-error This does not exist outside of polyfill which this is doing
-    Promise.withResolvers = function () {
-      let resolve, reject;
-      const promise = new Promise((res, rej) => {
-        resolve = res;
-        reject = rej;
-      });
-      return { promise, resolve, reject };
-    };
-  }
+  // if (typeof Promise.withResolvers === "undefined") {
+  //   // @ts-expect-error This does not exist outside of polyfill which this is doing
+  //   Promise.withResolvers = function () {
+  //     let resolve, reject;
+  //     const promise = new Promise((res, rej) => {
+  //       resolve = res;
+  //       reject = rej;
+  //     });
+  //     return { promise, resolve, reject };
+  //   };
+  // }
   return (
     <ClerkProvider
       afterMultiSessionSingleSignOutUrl={"/"}
@@ -44,6 +47,7 @@ export default function RootLayout({
               inter.className
             )}
           >
+            <NextSSRPlugin routerConfig={extractRouterConfig(ourFileRouter)}/>
             <Navbar />
             {children}
             <Toaster />
