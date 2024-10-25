@@ -8,7 +8,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@radix-ui/react-dropdown-menu";
-import { ColumnDef, Row } from "@tanstack/react-table";
+import { ColumnDef, Row, Table } from "@tanstack/react-table";
 import { format } from "date-fns";
 import { ArrowUpDown, EllipsisVertical, Trash2 } from "lucide-react";
 import Image from "next/image";
@@ -20,12 +20,153 @@ import { useToast } from "./ui/use-toast";
 export type File = {
   id: string;
   key: string;
-  name: string;
+  name: string
   url: string;
   createdAt: string;
   userId: string;
   uploadStatus: "PENDING" | "PROCESSING" | "FAILED" | "SUCCESS" | null;
   updatedAt: string;
+};
+
+
+const TableActionHeader = ({table} : {table: Table<File>})=>{
+  const selectedRows = table.getFilteredSelectedRowModel().rows;
+
+      const { toast } = useToast();
+
+      const [currentDeletingFile, setCurrentDeletingFile] = useState<
+        string[] | null
+      >(null);
+
+      const utils = trpc.useUtils();
+
+      const { mutate: deleteFilesFromDB } = trpc.deleteUserFiles.useMutation({
+        onMutate: ({ fileId }) => {
+          setCurrentDeletingFile(fileId);
+        },
+        onSettled: () => {
+          setCurrentDeletingFile(null);
+        },
+        onSuccess: () => {
+          utils.getUserFiles.invalidate();
+          toast({
+            variant: "success",
+            title: "File Deleted, Successfully!",
+            duration: 2500,
+          });
+        },
+        onError: (err) => {
+          toast({
+            variant: "destructive",
+            title: err.message,
+            duration: 2500,
+          });
+        },
+      });
+
+      return (
+        <div className="relative w-full text-right flex items-center justify-end">
+          {
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button
+                  disabled={!!currentDeletingFile || !selectedRows.length}
+                  aria-label="zoom"
+                  variant={"ghost"}
+                  size={"sm"}
+                  className="gap-1.5 border-none ring-0 focus-visible:ring-0 rounded-md text-zinc-700 font-medium hover:bg-zinc-200"
+                >
+                  <EllipsisVertical className="w-3 h-3 sm:w-4 sm:h-4" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className="w-44 z-30 mr-5 lg:mr-20 bg-white px-2 py-2 shadow-lg border border-1 border-zinc-200 rounded-md ">
+                <DropdownMenuItem
+                  onClick={() => {
+                    deleteFilesFromDB({
+                      fileId: selectedRows.map((file) => file.original.id),
+                    });
+                  }}
+                  className="hover:border-none hover:outline-none hover:bg-gray-100 py-1 px-2 rounded cursor-pointer flex gap-2"
+                >
+                  <Trash2 className="w-4 h-4 text-red-500" />
+                  <span className="text-red-600">
+                    {" "}
+                    Delete {selectedRows.length} files
+                  </span>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          }
+
+          {selectedRows.length > 0 && (
+            <div className="absolute -mt-1 top-0 right-0 w-4 h-4 sm:w-5 sm:h-5 rounded-full text-white text-center text-xs sm:text-sm bg-green-700">
+              {selectedRows.length}
+            </div>
+          )}
+        </div>
+      );
+}
+const TableActionCell = ({ row }: { row: Row<File> }) => {
+  const file = row.original;
+      const { toast } = useToast();
+
+      const [currentDeletingFile, setCurrentDeletingFile] = useState<
+        string | null
+      >(null);
+
+      const utils = trpc.useUtils();
+
+      const { mutate: deleteFileFromDB } = trpc.deleteUserFile.useMutation({
+        onMutate: ({ fileId }) => {
+          setCurrentDeletingFile(fileId);
+        },
+        onSettled: () => {
+          setCurrentDeletingFile(null);
+        },
+        onSuccess: async (file) => {
+          utils.getUserFiles.invalidate();
+          toast({
+            variant: "success",
+            title: "File Deleted, Successfully!",
+            duration: 2500,
+          });
+        },
+        onError: (err) => {
+          toast({
+            variant: "destructive",
+            title: err.message,
+            duration: 2500,
+          });
+        },
+      });
+      return (
+        <div className="w-full text-right">
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button
+                disabled={!!currentDeletingFile}
+                aria-label="zoom"
+                variant={"ghost"}
+                size={"sm"}
+                className="gap-1.5 border-none ring-0 focus-visible:ring-0 hover:bg-zinc-200"
+              >
+                <EllipsisVertical className="w-3 h-3 sm:w-4 sm:h-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent className="w-44 z-30 mr-5 lg:mr-20 bg-white px-2 py-2 shadow-lg border border-1 border-zinc-200 rounded-md ">
+              <DropdownMenuItem
+                onClick={() => {
+                  deleteFileFromDB({ fileId: file.id });
+                }}
+                className="hover:border-none hover:outline-none hover:bg-gray-100 py-1 px-2 rounded cursor-pointer flex gap-2"
+              >
+                <Trash2 className="w-4 h-4 text-red-500" />
+                <span className="text-red-600"> Delete</span>
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
+      );
 };
 
 export const columns: ColumnDef<File>[] = [
@@ -153,144 +294,12 @@ export const columns: ColumnDef<File>[] = [
   {
     id: "actions",
     header: ({ table }) => {
-      const selectedRows = table.getFilteredSelectedRowModel().rows;
+    return <TableActionHeader table={table} />
 
-      const { toast } = useToast();
-
-      const [currentDeletingFile, setCurrentDeletingFile] = useState<
-        string[] | null
-      >(null);
-
-      const utils = trpc.useUtils();
-
-      const { mutate: deleteFilesFromDB } = trpc.deleteUserFiles.useMutation({
-        onMutate: ({ fileId }) => {
-          setCurrentDeletingFile(fileId);
-        },
-        onSettled: () => {
-          setCurrentDeletingFile(null);
-        },
-        onSuccess: () => {
-          utils.getUserFiles.invalidate();
-          toast({
-            variant: "success",
-            title: "File Deleted, Successfully!",
-            duration: 2500,
-          });
-        },
-        onError: (err) => {
-          toast({
-            variant: "destructive",
-            title: err.message,
-            duration: 2500,
-          });
-        },
-      });
-
-      return (
-        <div className="relative w-full text-right flex items-center justify-end">
-          {
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button
-                  disabled={!!currentDeletingFile || !selectedRows.length}
-                  aria-label="zoom"
-                  variant={"ghost"}
-                  size={"sm"}
-                  className="gap-1.5 border-none ring-0 focus-visible:ring-0 rounded-md text-zinc-700 font-medium hover:bg-zinc-200"
-                >
-                  <EllipsisVertical className="w-3 h-3 sm:w-4 sm:h-4" />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent className="w-44 z-30 mr-5 lg:mr-20 bg-white px-2 py-2 shadow-lg border border-1 border-zinc-200 rounded-md ">
-                <DropdownMenuItem
-                  onClick={() => {
-                    deleteFilesFromDB({
-                      fileId: selectedRows.map((file) => file.original.id),
-                    });
-                  }}
-                  className="hover:border-none hover:outline-none hover:bg-gray-100 py-1 px-2 rounded cursor-pointer flex gap-2"
-                >
-                  <Trash2 className="w-4 h-4 text-red-500" />
-                  <span className="text-red-600">
-                    {" "}
-                    Delete {selectedRows.length} files
-                  </span>
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-          }
-
-          {selectedRows.length > 0 && (
-            <div className="absolute -mt-1 top-0 right-0 w-4 h-4 sm:w-5 sm:h-5 rounded-full text-white text-center text-xs sm:text-sm bg-green-700">
-              {selectedRows.length}
-            </div>
-          )}
-        </div>
-      );
     },
     enableHiding: false,
     cell: ({ row }) => {
-      const file = row.original;
-      const { toast } = useToast();
-
-      const [currentDeletingFile, setCurrentDeletingFile] = useState<
-        string | null
-      >(null);
-
-      const utils = trpc.useUtils();
-
-      const { mutate: deleteFileFromDB } = trpc.deleteUserFile.useMutation({
-        onMutate: ({ fileId }) => {
-          setCurrentDeletingFile(fileId);
-        },
-        onSettled: () => {
-          setCurrentDeletingFile(null);
-        },
-        onSuccess: async (file) => {
-          utils.getUserFiles.invalidate();
-          toast({
-            variant: "success",
-            title: "File Deleted, Successfully!",
-            duration: 2500,
-          });
-        },
-        onError: (err) => {
-          toast({
-            variant: "destructive",
-            title: err.message,
-            duration: 2500,
-          });
-        },
-      });
-      return (
-        <div className="w-full text-right">
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button
-                disabled={!!currentDeletingFile}
-                aria-label="zoom"
-                variant={"ghost"}
-                size={"sm"}
-                className="gap-1.5 border-none ring-0 focus-visible:ring-0 hover:bg-zinc-200"
-              >
-                <EllipsisVertical className="w-3 h-3 sm:w-4 sm:h-4" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent className="w-44 z-30 mr-5 lg:mr-20 bg-white px-2 py-2 shadow-lg border border-1 border-zinc-200 rounded-md ">
-              <DropdownMenuItem
-                onClick={() => {
-                  deleteFileFromDB({ fileId: file.id });
-                }}
-                className="hover:border-none hover:outline-none hover:bg-gray-100 py-1 px-2 rounded cursor-pointer flex gap-2"
-              >
-                <Trash2 className="w-4 h-4 text-red-500" />
-                <span className="text-red-600"> Delete</span>
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-        </div>
-      );
+      return <TableActionCell row={row} />;
     },
   },
 ];

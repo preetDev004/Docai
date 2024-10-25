@@ -23,7 +23,7 @@ const ChatInput = ({ isDisabled }: ChatInputProps) => {
                 placeholder="Ask Anything..."
             
               />
-              <Button size={"sm"} aria-lable="send message" className="absolute right-1.5 bottom-1.5">
+              <Button size={"sm"} aria-label="send message" className="absolute right-1.5 bottom-1.5">
                 <Send className="w-4 h-4 " />
               </Button>
             </div>

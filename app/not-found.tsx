@@ -17,7 +17,7 @@ const NotFound = () => {
               Oops!
             </h1>
             <p className="text-sm md:text-base text-gray-600">
-            Looks like you've hit a dead end.
+            Looks like you&apos;ve hit a dead end.
             </p>
           </div>
         </div>
