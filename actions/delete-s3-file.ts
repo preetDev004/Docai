@@ -11,7 +11,7 @@ export const deleteS3Files = async ({
   key: string | string[];
   user: string;
 }) => {
-  const { userId } = auth()
+  const { userId } = await auth()
   if (!userId || userId !== user) {
     throw new Error("Unauthorized");
   }

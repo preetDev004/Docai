@@ -35,25 +35,25 @@ export default function RootLayout({
   //   };
   // }
   return (
-    <ClerkProvider
-      afterMultiSessionSingleSignOutUrl={"/"}
-      afterSignOutUrl={"/"}
+    <html lang="en" className="light">
+    <body
+      className={cn(
+        "min-h-screen font-sans antialiased grainy",
+        inter.className
+      )}
     >
-      <TRPCProvider>
-        <html lang="en" className="light">
-          <body
-            className={cn(
-              "min-h-screen font-sans antialiased grainy",
-              inter.className
-            )}
-          >
-            <NextSSRPlugin routerConfig={extractRouterConfig(ourFileRouter)}/>
-            <Navbar />
-            {children}
-            <Toaster />
-          </body>
-        </html>
-      </TRPCProvider>
-    </ClerkProvider>
+      <ClerkProvider 
+        afterMultiSessionSingleSignOutUrl={"/"}
+        afterSignOutUrl={"/"}
+      >
+        <TRPCProvider>
+          <NextSSRPlugin routerConfig={extractRouterConfig(ourFileRouter)}/>
+          <Navbar />
+          {children}
+          <Toaster />
+        </TRPCProvider>
+      </ClerkProvider>
+    </body>
+  </html>
   );
 }

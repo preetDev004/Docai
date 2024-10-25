@@ -64,7 +64,7 @@ const PdfRenderer = ({ url }: { url: string }) => {
   };
 
   return (
-    <div className="w-full bg-white rounded-md shadow flex flex-col items-center">
+    (<div className="w-full bg-white rounded-md shadow flex flex-col items-center">
       {/* custom PDF tools */}
       <div className="h-14 w-full border-b border-zinc-200 flex items-center justify-between py-2 px-4">
         <div className="flex items-center gap-1">
@@ -174,7 +174,6 @@ const PdfRenderer = ({ url }: { url: string }) => {
           <PDFFullscreen url={url} />
         </div>
       </div>
-
       {/* Main PDF */}
       <div className="flex-1 w-full max-h-screen">
         <SimpleBar autoHide={false} className="max-h-[calc(100vh-10rem)]">
@@ -200,7 +199,7 @@ const PdfRenderer = ({ url }: { url: string }) => {
               {/* Loading for Low Threshold devices if scaling takes time */}
               {isLoading && renderedScale ? (
                 // Show previous scale page until onRenderSuccess!
-                <Page
+                (<Page
                   key={"@" + renderedScale} // To avoid flicker add key to identify/distinguish both the pages
                   rotate={rotation}
                   scale={renderedScale}
@@ -212,7 +211,7 @@ const PdfRenderer = ({ url }: { url: string }) => {
                       ? 1
                       : currPage
                   }
-                />
+                />)
               ) : null}
               {/* Hide this page when scale is changed */}
               <Page
@@ -235,7 +234,7 @@ const PdfRenderer = ({ url }: { url: string }) => {
           </div>
         </SimpleBar>
       </div>
-    </div>
+    </div>)
   );
 };
 

@@ -51,7 +51,7 @@ const Dashboard = () => {
   });
 
   return (
-    <MaxWidthWrapper classname="md:py-10">
+    (<MaxWidthWrapper classname="md:py-10">
       <div className="mt-8 flex items-center justify-between gap-4 border-b border-gray-200 pb-5">
         <div className="flex items-center gap-1 md:gap-2">
           <h1 className="font-semibold text-2xl sm:text-3xl lg:text-4xl">
@@ -60,16 +60,15 @@ const Dashboard = () => {
         </div>
         <UploadButton />
       </div>
-
       {/* display all user files  */}
       {isLoading ? (
         // <Loader title="Please wait..." description="Grabbing all your files." />
-        <div className="mt-8">
+        (<div className="mt-8">
           <Skeleton count={4} className="p-2 my-2" height={60} />
-        </div>
+        </div>)
       ) : files && files?.length !== 0 ? (
         // TODO : REMOVE THIS LATER AND SHOW RECENTLY ADDED FILES (Only 3 after lg screen)
-        <>
+        (<>
           <ul className="mt-8 grid grid-cols-1 gap-6 divide-y divide-zinc-200 md:grid-cols-2 lg:grid-cols-3">
             {files
               .sort(
@@ -140,7 +139,7 @@ const Dashboard = () => {
               ))}
           </ul>
           <DataTable columns={columns} data={files} />
-        </>
+        </>)
       ) : (
         <div className="w-full mt-24 flex flex-col items-center gap-4 text-center">
           <Image
@@ -159,7 +158,7 @@ const Dashboard = () => {
           </div>
         </div>
       )}
-    </MaxWidthWrapper>
+    </MaxWidthWrapper>)
   );
 };
 

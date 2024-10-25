@@ -9,8 +9,8 @@ const f = createUploadthing();
 // FileRouter for your app, can contain multiple FileRoutes
 export const ourFileRouter = {
   pdfUploader: f({ pdf: { maxFileSize: "4MB" } }, { awaitServerData: true })
-    .middleware(() => {
-      const { userId } = auth();
+    .middleware(async () => {
+      const { userId } = await auth();
       if (!userId) throw new UploadThingError("Unauthorized");
 
       return { userId: userId };

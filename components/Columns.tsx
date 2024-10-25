@@ -1,6 +1,5 @@
 "use client";
 
-import { deleteS3Files } from "@/actions/delete-s3-file";
 import { trpc } from "@/app/_trpc/client";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
@@ -11,7 +10,7 @@ import {
 } from "@radix-ui/react-dropdown-menu";
 import { ColumnDef, Row } from "@tanstack/react-table";
 import { format } from "date-fns";
-import { ArrowUpDown, EllipsisVertical, Loader2, Trash2 } from "lucide-react";
+import { ArrowUpDown, EllipsisVertical, Trash2 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";

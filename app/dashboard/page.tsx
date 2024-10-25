@@ -6,7 +6,7 @@ import { eq } from "drizzle-orm";
 import { redirect } from "next/navigation";
 
 const Page = async () => {
-  const { userId } = auth();
+  const { userId } = await auth();
   if (!userId) {
     redirect("/auth-callback?origin=dashboard");
   }

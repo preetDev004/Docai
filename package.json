@@ -3,13 +3,13 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
     "lint": "next lint"
   },
   "dependencies": {
-    "@clerk/nextjs": "^5.4.1",
+    "@clerk/nextjs": "^6.0.2",
     "@hookform/resolvers": "^3.9.0",
     "@neondatabase/serverless": "^0.9.4",
     "@pinecone-database/pinecone": "^3.0.2",
@@ -34,9 +34,9 @@
     "dotenv": "^16.4.5",
     "drizzle-orm": "^0.33.0",
     "lucide-react": "^0.429.0",
-    "next": "14.2.5",
-    "react": "^18",
-    "react-dom": "^18",
+    "next": "^15.0.1",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
     "react-dropzone": "^14.2.3",
     "react-hook-form": "^7.53.0",
     "react-loading-skeleton": "^3.4.0",
@@ -51,13 +51,17 @@
   },
   "devDependencies": {
     "@types/node": "^20",
-    "@types/react": "^18",
-    "@types/react-dom": "^18",
+    "@types/react": "npm:types-react@19.0.0-rc.1",
+    "@types/react-dom": "npm:types-react-dom@19.0.0-rc.1",
     "drizzle-kit": "^0.24.1",
     "eslint": "^8",
-    "eslint-config-next": "^0.2.4",
+    "eslint-config-next": "15.0.1",
     "postcss": "^8",
     "tailwindcss": "^3.4.1",
     "typescript": "^5"
+  },
+  "overrides": {
+    "@types/react": "npm:types-react@19.0.0-rc.1",
+    "@types/react-dom": "npm:types-react-dom@19.0.0-rc.1"
   }
 }

@@ -8,14 +8,15 @@ import { redirect } from "next/navigation";
 import React from "react";
 
 interface PageProps {
-  params: {
+  params: Promise<{
     fileid: string;
-  };
+  }>;
 }
 
-const Page = async ({ params }: PageProps) => {
+const Page = async (props: PageProps) => {
+  const params = await props.params;
   const { fileid } = params;
-  const { userId } = auth();
+  const { userId } = await auth();
 
   if (!userId) redirect(`/auth-callback?origin=dashboard/${fileid}`);
 
