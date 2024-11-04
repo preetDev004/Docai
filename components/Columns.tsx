@@ -74,7 +74,7 @@ const TableActionHeader = ({table} : {table: Table<File>})=>{
                   aria-label="zoom"
                   variant={"ghost"}
                   size={"sm"}
-                  className="gap-1.5 border-none ring-0 focus-visible:ring-0 rounded-md text-zinc-700 font-medium hover:bg-zinc-200"
+                  className="gap-1.5 border-none rounded-full ring-0 focus-visible:ring-0 text-zinc-700 font-medium hover:bg-zinc-200"
                 >
                   <EllipsisVertical className="w-3 h-3 sm:w-4 sm:h-4" />
                 </Button>
@@ -148,7 +148,7 @@ const TableActionCell = ({ row }: { row: Row<File> }) => {
                 aria-label="zoom"
                 variant={"ghost"}
                 size={"sm"}
-                className="gap-1.5 border-none ring-0 focus-visible:ring-0 hover:bg-zinc-200"
+                className="gap-1.5 border-none ring-0 rounded-full focus-visible:ring-0 hover:bg-zinc-200"
               >
                 <EllipsisVertical className="w-3 h-3 sm:w-4 sm:h-4" />
               </Button>
@@ -280,7 +280,7 @@ export const columns: ColumnDef<File>[] = [
       return (
         <div className="text-right">
           <Link
-            className="w-full border-2 broder-zinc-300 hover:bg-zinc-300 shadow-b hover:shadow py-2 px-4 cursor-pointer rounded-md transition-all duration-300"
+            className="w-full border-2 broder-zinc-300 hover:bg-zinc-200 shadow-b hover:shadow py-2 px-4 cursor-pointer rounded-md transition-all duration-300"
             href={`/dashboard/${file.id}`}
           >
             Ask

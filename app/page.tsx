@@ -1,3 +1,4 @@
+import Footer from "@/components/Footer";
 import MaxWidthWrapper from "@/components/MaxWidthWrapper";
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -12,7 +13,7 @@ export default function Home() {
         {/* badge */}
         <div className="mx-auto mb-4 flex max-w-fit items-center justify-center space-x-2 overflow-hidden rounded-full border border-gray-200 bg-white px-7 py-2 shadow-md backdrop-blur transition-all hover:border-gray-300  hover:bg-white/50">
           <p className="text-sm font-semibold text-gray-700">
-            Docai is
+            Docai <span className="text-green-600">V1</span> is
             <span className="text-green-600"> now</span> public!
           </p>
         </div>
@@ -47,7 +48,7 @@ export default function Home() {
         {/* decorational */}
         <div
           aria-hidden="true"
-          className="mt-5 lg:mt-10 pointer-events-none absolute inset-x-0 -top-40 -z-10 transform-gpu overflow-hidden blur-3xl sm:-top-80"
+          className="mt-5 lg:mt-10 pointer-events-none absolute inset-x-0 -top-40 -z-10 transform-gpu overflow-hidden blur-3xl sm:-top-80 animate-pulse "
         >
           <div
             style={{
@@ -58,7 +59,7 @@ export default function Home() {
           />
         </div>
 
-        <div className="mx-auto max-w-6xl px-6 lg:px-8">
+        <div className="mx-auto max-w-6xl px-6 lg:px-8 drop-shadow-md">
           <div className="mt-16 flow-root sm:mt-24">
             <div className="-m-2 rounded-xl bg-gray-900/5 p-2 ring-1 ring-inset ring-gray-900/10 lg:-m-4 lg:rounded-2xl lg:p-4">
               <Image
@@ -75,7 +76,7 @@ export default function Home() {
 
         <div
           aria-hidden="true"
-          className="mt-5 lg:mt-10 pointer-events-none absolute inset-x-0 -top-40 -z-10 transform-gpu overflow-hidden blur-3xl sm:-top-80"
+          className="mt-5 lg:mt-10 pointer-events-none absolute inset-x-0 -top-40 -z-10 transform-gpu overflow-hidden blur-3xl sm:-top-80 animate-pulse"
         >
           <div
             style={{
@@ -88,7 +89,7 @@ export default function Home() {
       </div>
 
       {/* Feature section */}
-      <div className="mx-auto mt-24 mb-32 max-w-5xl sm:mt-44">
+      <div className="mx-auto mt-24 mb-40 max-w-5xl sm:mt-44">
         <div className="sm:mb-12 px-6 lg:px-8">
           <div className="mx-auto max-w-2xl sm:text-center">
             <h2 className="mt-2 font-bold text-gray-900 text-4xl sm:text-5xl">
@@ -100,8 +101,9 @@ export default function Home() {
           </div>
         </div>
 
+       
         {/* steps */}
-        <ol className="m-4 sm:my-8 space-y-4 pt-8 md:flex md:space-x-12 md:space-y-0">
+        <ol className="m-4 sm:my-8 space-y-4 pt-8 md:flex md:space-x-12 md:space-y-0 ">
           <li className="md:flex-1">
             <div className="flex flex-col space-y-2 border-l-4 border-zinc-300 py-2 pl-4 md:border-l-0 md:border-t-2 md:pl-0 md:pt-4">
               <span className="text-sm font-medium text-green-600">Step 1</span>

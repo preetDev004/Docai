@@ -11,6 +11,7 @@ import 'simplebar-react/dist/simplebar.min.css';
 import { Toaster } from "@/components/ui/toaster";
 import { extractRouterConfig } from "uploadthing/server";
 import { ourFileRouter } from "./api/uploadthing/core";
+import Footer from "@/components/Footer";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
@@ -50,6 +51,7 @@ export default function RootLayout({
           <NextSSRPlugin routerConfig={extractRouterConfig(ourFileRouter)}/>
           <Navbar />
           {children}
+          <Footer />
           <Toaster />
         </TRPCProvider>
       </ClerkProvider>
