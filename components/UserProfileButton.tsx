@@ -8,6 +8,17 @@ import { buttonVariants } from "./ui/button";
 
 const UserProfileButton = () => {
   const { isLoaded } = useUser();
+  if (!isLoaded) {
+    return (
+        <Skeleton
+          circle
+          height={28}
+          width={28}
+          count={1}
+          style={{ background: "#E0E0E0", transform: "rotate(30deg)" }}
+        />
+    );
+  }
   return (
     <div className="flex gap-2">
       <>
@@ -30,18 +41,7 @@ const UserProfileButton = () => {
             >
               Dashboard
             </Link>
-
-            {!isLoaded ? (
-              <Skeleton
-                circle
-                height={28}
-                width={28}
-                count={1}
-                style={{ background: "#E0E0E0", transform: "rotate(30deg)" }}
-              />
-            ) : (
-              <UserButton />
-            )}
+            <UserButton />
           </div>
         </SignedIn>
       </>

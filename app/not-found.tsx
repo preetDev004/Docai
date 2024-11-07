@@ -5,7 +5,7 @@ import React from 'react'
 const NotFound = () => {
   return (
     <MaxWidthWrapper>
-        <div className="w-full mt-24 flex flex-col items-center gap-4 text-center">
+        <div className="w-full min-h-screen mt-28 flex flex-col items-center gap-4 text-center ">
           <Image
             src={"/404-page.svg"}
             alt="No Data"

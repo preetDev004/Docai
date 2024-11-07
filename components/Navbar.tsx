@@ -1,6 +1,3 @@
-import { cn } from "@/lib/utils";
-import { SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
-import { ArrowRight } from "lucide-react";
 import Link from "next/link";
 import MaxWidthWrapper from "./MaxWidthWrapper";
 import { buttonVariants } from "./ui/button";

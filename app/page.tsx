@@ -1,22 +1,33 @@
-import Footer from "@/components/Footer";
+"use client";
+import * as motion from "framer-motion/client";
 import MaxWidthWrapper from "@/components/MaxWidthWrapper";
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { ArrowRight } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import Badge from "@/components/Badge";
 
 export default function Home() {
+  const pathVariants = {
+    initial: {
+      pathLength: 0,
+      opacity: 0,
+    },
+    animate: {
+      pathLength: 1,
+      opacity: 1,
+      transition: {
+        pathLength: { duration: 2, ease: "easeInOut" },
+        opacity: { duration: 0.5 },
+      },
+    },
+  };
   return (
     <>
       <MaxWidthWrapper classname="mb-12 mt-28 sm:mt-40 flex flex-col items-center justify-center text-center">
         {/* badge */}
-        <div className="mx-auto mb-4 flex max-w-fit items-center justify-center space-x-2 overflow-hidden rounded-full border border-gray-200 bg-white px-7 py-2 shadow-md backdrop-blur transition-all hover:border-gray-300  hover:bg-white/50">
-          <p className="text-sm font-semibold text-gray-700">
-            Docai <span className="text-green-600">V1</span> is
-            <span className="text-green-600"> now</span> public!
-          </p>
-        </div>
+        <Badge />
 
         <h1 className="max-w-4xl text-5xl font-bold md:text-6xl lg:text-7xl">
           Chat with your <br />{" "}
@@ -42,7 +53,6 @@ export default function Home() {
           Get Started <ArrowRight className="ml-2 h-5 w-5" />
         </Link>
       </MaxWidthWrapper>
-
       {/* value proposition section */}
       <div className="relative isolate">
         {/* decorational */}
@@ -101,7 +111,6 @@ export default function Home() {
           </div>
         </div>
 
-       
         {/* steps */}
         <ol className="m-4 sm:my-8 space-y-4 pt-8 md:flex md:space-x-12 md:space-y-0 ">
           <li className="md:flex-1">
