@@ -1,5 +1,3 @@
-"use client";
-import * as motion from "framer-motion/client";
 import MaxWidthWrapper from "@/components/MaxWidthWrapper";
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -9,20 +7,7 @@ import Link from "next/link";
 import Badge from "@/components/Badge";
 
 export default function Home() {
-  const pathVariants = {
-    initial: {
-      pathLength: 0,
-      opacity: 0,
-    },
-    animate: {
-      pathLength: 1,
-      opacity: 1,
-      transition: {
-        pathLength: { duration: 2, ease: "easeInOut" },
-        opacity: { duration: 0.5 },
-      },
-    },
-  };
+
   return (
     <>
       <MaxWidthWrapper classname="mb-12 mt-28 sm:mt-40 flex flex-col items-center justify-center text-center">

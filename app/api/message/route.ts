@@ -1,12 +1,12 @@
 import { db } from "@/drizzle/db";
 import { fileTable, messageTable } from "@/drizzle/schema";
 import { sendMessageValidator } from "@/lib/sendMessageValidator";
-import { auth } from "@clerk/nextjs/dist/types/server";
+import { auth } from "@clerk/nextjs/server";
 import { and, eq } from "drizzle-orm";
 import { NextRequest, NextResponse } from "next/server";
 
 export const POST = async (req: NextRequest) => {
-  const { userId } = auth();
+  const { userId } = await auth();
 
   if (!userId) {
     return new NextResponse("Unauthorized", { status: 401 });

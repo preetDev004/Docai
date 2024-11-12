@@ -4,9 +4,19 @@ import Loader from "@/components/Loader";
 import { useUser } from "@clerk/nextjs";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect } from "react";
+import { Suspense } from "react";
 
 const Page = () => {
-  // registring the user to the database
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <ComponentUsingSearchParams />
+    </Suspense>
+  );
+};
+
+export default Page;
+
+const ComponentUsingSearchParams = () => {
   const router = useRouter();
   const { user } = useUser();
   const searchParams = useSearchParams();
@@ -32,8 +42,7 @@ const Page = () => {
         router.push("/dashboard");
       }
     }
-  }, [error, user]);
-
+  }, [error, user, router, origin]);
   return (
     <>
       {isLoading ||
@@ -46,5 +55,3 @@ const Page = () => {
     </>
   );
 };
-
-export default Page;
