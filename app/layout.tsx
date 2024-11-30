@@ -36,6 +36,10 @@ export default function RootLayout({
   //   };
   // }
   return (
+      <ClerkProvider 
+        afterMultiSessionSingleSignOutUrl={"/"}
+        afterSignOutUrl={"/"}
+      >
     <html lang="en" className="light">
     <body
       suppressHydrationWarning
@@ -44,10 +48,6 @@ export default function RootLayout({
         inter.className
       )}
     >
-      <ClerkProvider 
-        afterMultiSessionSingleSignOutUrl={"/"}
-        afterSignOutUrl={"/"}
-      >
         <TRPCProvider>
           <NextSSRPlugin routerConfig={extractRouterConfig(ourFileRouter)}/>
           <Navbar />
@@ -55,8 +55,8 @@ export default function RootLayout({
           <Footer />
           <Toaster />
         </TRPCProvider>
-      </ClerkProvider>
     </body>
   </html>
+      </ClerkProvider>
   );
 }
